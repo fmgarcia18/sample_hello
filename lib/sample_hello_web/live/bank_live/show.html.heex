@@ -1,0 +1,31 @@
+<.header>
+  Bank {@bank.id}
+  <:subtitle>This is a bank record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/banks/#{@bank}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit bank</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Createdby">{@bank.createdBy}</:item>
+  <:item title="Lastmodifiedby">{@bank.lastModifiedBy}</:item>
+  <:item title="Versionnumber">{@bank.versionNumber}</:item>
+  <:item title="Code">{@bank.code}</:item>
+  <:item title="Cuit">{@bank.cuit}</:item>
+  <:item title="Description">{@bank.description}</:item>
+</.list>
+
+<.back navigate={~p"/banks"}>Back to banks</.back>
+
+<.modal :if={@live_action == :edit} id="bank-modal" show on_cancel={JS.patch(~p"/banks/#{@bank}")}>
+  <.live_component
+    module={SampleHelloWeb.BankLive.FormComponent}
+    id={@bank.id}
+    title={@page_title}
+    action={@live_action}
+    bank={@bank}
+    patch={~p"/banks/#{@bank}"}
+  />
+</.modal>

@@ -1,0 +1,46 @@
+<.header>
+  Listing Banks
+  <:actions>
+    <.link patch={~p"/banks/new"}>
+      <.button>New Bank</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="banks"
+  rows={@streams.banks}
+  row_click={fn {_id, bank} -> JS.navigate(~p"/banks/#{bank}") end}
+>
+  <:col :let={{_id, bank}} label="Createdby">{bank.createdBy}</:col>
+  <:col :let={{_id, bank}} label="Lastmodifiedby">{bank.lastModifiedBy}</:col>
+  <:col :let={{_id, bank}} label="Versionnumber">{bank.versionNumber}</:col>
+  <:col :let={{_id, bank}} label="Code">{bank.code}</:col>
+  <:col :let={{_id, bank}} label="Cuit">{bank.cuit}</:col>
+  <:col :let={{_id, bank}} label="Description">{bank.description}</:col>
+  <:action :let={{_id, bank}}>
+    <div class="sr-only">
+      <.link navigate={~p"/banks/#{bank}"}>Show</.link>
+    </div>
+    <.link patch={~p"/banks/#{bank}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, bank}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: bank.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="bank-modal" show on_cancel={JS.patch(~p"/banks")}>
+  <.live_component
+    module={SampleHelloWeb.BankLive.FormComponent}
+    id={@bank.id || :new}
+    title={@page_title}
+    action={@live_action}
+    bank={@bank}
+    patch={~p"/banks"}
+  />
+</.modal>
