@@ -2,6 +2,9 @@
 set -o errexit
 
 mix deps.get --only prod
+
+mix ecto.migrate
+
 MIX_ENV=prod mix compile
 
 MIX_ENV=prod mix assets.build
